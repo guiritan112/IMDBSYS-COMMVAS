@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="CommVasModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="CommVasEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Role" EntityType="CommVasModel.Role" />
+    <EntitySet Name="UserInfo" EntityType="CommVasModel.UserInfo" />
+    <EntitySet Name="UserRole" EntityType="CommVasModel.UserRole" />
+    <AssociationSet Name="FK_UserInfo_Role" Association="CommVasModel.FK_UserInfo_Role">
+      <End Role="Role" EntitySet="Role" />
+      <End Role="UserInfo" EntitySet="UserInfo" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UserRole_Role" Association="CommVasModel.FK_UserRole_Role">
+      <End Role="Role" EntitySet="Role" />
+      <End Role="UserRole" EntitySet="UserRole" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UserRole_UserInfo" Association="CommVasModel.FK_UserRole_UserInfo">
+      <End Role="UserInfo" EntitySet="UserInfo" />
+      <End Role="UserRole" EntitySet="UserRole" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Role">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" />
+    <Property Name="roleName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="UserInfo" Relationship="CommVasModel.FK_UserInfo_Role" FromRole="Role" ToRole="UserInfo" />
+    <NavigationProperty Name="UserRole" Relationship="CommVasModel.FK_UserRole_Role" FromRole="Role" ToRole="UserRole" />
+  </EntityType>
+  <EntityType Name="UserInfo">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="firstName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="lastName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="password" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="email" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+    <Property Name="roleId" Type="Int32" />
+    <Property Name="userAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="contactNumber" Type="Int32" />
+    <NavigationProperty Name="Role" Relationship="CommVasModel.FK_UserInfo_Role" FromRole="UserInfo" ToRole="Role" />
+    <NavigationProperty Name="UserRole" Relationship="CommVasModel.FK_UserRole_UserInfo" FromRole="UserInfo" ToRole="UserRole" />
+  </EntityType>
+  <EntityType Name="UserRole">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="userId" Type="Int32" />
+    <Property Name="roleId" Type="Int32" />
+    <NavigationProperty Name="Role" Relationship="CommVasModel.FK_UserRole_Role" FromRole="UserRole" ToRole="Role" />
+    <NavigationProperty Name="UserInfo" Relationship="CommVasModel.FK_UserRole_UserInfo" FromRole="UserRole" ToRole="UserInfo" />
+  </EntityType>
+  <Association Name="FK_UserInfo_Role">
+    <End Type="CommVasModel.Role" Role="Role" Multiplicity="0..1" />
+    <End Type="CommVasModel.UserInfo" Role="UserInfo" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Role">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="UserInfo">
+        <PropertyRef Name="roleId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UserRole_Role">
+    <End Type="CommVasModel.Role" Role="Role" Multiplicity="0..1" />
+    <End Type="CommVasModel.UserRole" Role="UserRole" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Role">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="UserRole">
+        <PropertyRef Name="roleId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UserRole_UserInfo">
+    <End Type="CommVasModel.UserInfo" Role="UserInfo" Multiplicity="0..1" />
+    <End Type="CommVasModel.UserRole" Role="UserRole" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserInfo">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="UserRole">
+        <PropertyRef Name="userId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>
